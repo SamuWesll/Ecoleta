@@ -53,6 +53,18 @@ const styles = StyleSheet.create({
         // width: '47%',
         margin: '2%'
     },
+    buttonCadastro: {
+        // backgroundColor: '#34CB79',
+        backgroundColor: 'brown',
+        height: 60,
+        flexDirection: 'row',
+        borderRadius: 10,
+        overflow: 'hidden',
+        alignItems: 'center',
+        marginTop: 8,
+        // width: '47%',
+        margin: '2%'
+    },
 
     buttonIcon: {
         height: 60,

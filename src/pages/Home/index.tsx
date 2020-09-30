@@ -1,6 +1,5 @@
 import React from 'react';
-import { Text, ImageBackground, View, Image } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { Text, ImageBackground, View, Image, TouchableOpacity } from 'react-native';
 import { Feather as Icon } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native';
 
@@ -16,6 +15,10 @@ function Home() {
         navigate('Login')
     }
 
+    function handleNavigateToCadastrar() {
+        navigate('Cadastro')
+    }
+
     return (
         <ImageBackground
             source={homeBackGround}
@@ -28,12 +31,18 @@ function Home() {
                 <Text style={styles.description}>Ajudamos pessoas a encontrarem pontos de coletas de forma eficiente.</Text>
             </View>
             <View style={styles.footer}>
-                <RectButton style={styles.button} onPress={handleNavigateToLogin}>
+                <TouchableOpacity style={styles.button} onPress={handleNavigateToLogin}>
                     <View style={styles.buttonIcon}>
                         <Icon name="user" color="#fff" size={24} />
                     </View>
                     <Text style={styles.buttonText}>Entrar</Text>
-                </RectButton>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonCadastro} onPress={handleNavigateToCadastrar}>
+                    <View style={styles.buttonIcon}>
+                        <Icon name="user-plus" color="#fff" size={24} />
+                    </View>
+                    <Text style={styles.buttonText}>Cadastrar</Text>
+                </TouchableOpacity>
                 <View style={styles.viewPontos}>
                     <Text style={styles.viewText}>Desejar cadastrar um ponto de coleta?</Text>
                     <Text >Entre em contato com o numero: 0800 000 000 100</Text>

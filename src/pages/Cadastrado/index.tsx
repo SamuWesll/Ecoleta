@@ -1,16 +1,12 @@
 import React from 'react';
-import { ImageBackground, View, KeyboardAvoidingView, Platform, TouchableOpacity, Image, Text } from 'react-native';
+import { View, KeyboardAvoidingView, Platform, ImageBackground, TouchableOpacity, Text, ScrollView, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Feather as Icon } from '@expo/vector-icons';
-import firebase from '../../services/firebase'
+import { Feather } from '@expo/vector-icons';
 
 import homeBackGround from '../../assets/images/home-background.png'
-import logoImg from '../../assets/images/logo.png'
+import style from './styles';
 
-import style from './style';
-import { firestore } from 'firebase';
-
-const Login = () => {
+const Cadastro = () => {
 
     const navigation = useNavigation();
 
@@ -18,25 +14,23 @@ const Login = () => {
         navigation.goBack();
     }
 
-    function login() {
-        
-    }
-
     return (
         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? "padding" : "height"}>
             <ImageBackground source={homeBackGround} style={style.container} imageStyle={{ width: 274, height: 368 }}>
                 <View style={style.header}>
                     <TouchableOpacity onPress={navigatedBack}>
-                        <Icon name="arrow-left" size={24} color="black" />
+                        <Feather name="arrow-left" size={24} color="black" />
                     </TouchableOpacity>
+                    <Text style={style.headerTitle}>Cadastro de usuario</Text>
                 </View>
                 <View style={style.main}>
-                    <Image source={logoImg} />
-                    <Text style={style.mainText}>Encontrando pontos de coletas</Text>
+                    <ScrollView>
+                        <TextInput style={style.input} placeholder='Digite seu login' />
+                    </ScrollView>
                 </View>
             </ImageBackground>
         </KeyboardAvoidingView>
     )
 }
 
-export default Login;
+export default Cadastro;
