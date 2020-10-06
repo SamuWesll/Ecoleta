@@ -13,6 +13,11 @@ function AppStack() {
         <NavigationContainer>
             <Navigator
                 headerMode="none"
+                screenOptions={{
+                    cardStyle: {
+                        backgroundColor: "#f0f0f5"
+                    }
+                }}
             >
                 <Screen name="Home" component={Home} />
                 <Screen name="Login" component={Login} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, ImageBackground, View, Image, TouchableOpacity } from 'react-native';
+import { Text, ImageBackground, View, Image, TouchableOpacity, TextInput } from 'react-native';
 import { Feather as Icon } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native';
 
@@ -10,7 +10,7 @@ import styles from './style'
 function Home() {
 
     const { navigate } = useNavigation();
-    
+
     function handleNavigateToLogin() {
         navigate('Login')
     }
