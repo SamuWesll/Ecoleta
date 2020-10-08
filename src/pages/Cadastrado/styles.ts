@@ -3,7 +3,8 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 32,
+        paddingVertical: 32,
+        paddingHorizontal: 14,
         height: '100%'
     },
     header: {
@@ -17,8 +18,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Aleo_700Bold',
     },
     main: {
-        alignItems: 'center',
-        // margin: 10,
+        // alignItems: 'center',
         height: '100%',
     },
     inputTitle: {
@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-around',
-        // marginTop: 10,
     },
     iconInput: {
         marginLeft: -70,
@@ -48,12 +47,13 @@ const styles = StyleSheet.create({
     },
     viewMap: {
         flex: 1,
-        width: '100%',
+        width: '90%',
         borderRadius: 10,
         overflow: 'hidden',
-        marginTop: 16,
+        // marginTop: 16,
         borderColor: 'gray',
         borderWidth: 1,
+        marginLeft: 20,
     },
     mapMarker: {
         width: '100%',
@@ -62,13 +62,14 @@ const styles = StyleSheet.create({
     footer: {
         width: '100%',
         height: 100,
-        marginBottom: 40,
-        alignItems: 'center'
+        marginBottom: 50,
+        alignItems: 'center',
+        marginTop: 50,
     },
     buttonCadastrar: {
         backgroundColor: 'green',
         borderRadius: 8,
-        height: 40,
+        height: 50,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
@@ -81,7 +82,63 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         width: '90%',
         textAlign: 'center',
-        // fontFamily: 'Aleo_700Bold',
+    },
+    modalContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 60,
+        backgroundColor: 'white',
+        marginHorizontal: 25,
+        borderRadius: 8,
+    },
+    modalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 10,
+        width: '100%',
+        paddingHorizontal: 10,
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontFamily: 'Aleo_700Bold',
+    },
+    modalBody: {
+        marginVertical: 15,
+        paddingHorizontal: 20,
+        alignItems: 'center'
+    },
+    modalText: {
+        textAlign: 'center',
+        marginTop: 5,
+        fontSize: 17,
+    },
+    modalFooter: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-evenly',
+        marginVertical: 20,
+    },
+    buttoModalFooterButtonSim: {
+        flexDirection: 'row',
+        backgroundColor: 'green',
+        paddingVertical: 5,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        width: '25%',
+    },
+    buttoModalFooterButtonNao: {
+        flexDirection: 'row',
+        backgroundColor: 'red',
+        paddingVertical: 5,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        width: '25%',
+    },
+    textModalText: {
+        color: 'white',
+        fontSize: 14,
     },
 });
 export default styles;

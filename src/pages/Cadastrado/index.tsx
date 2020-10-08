@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, ImageBackground, TouchableOpacity, Text, TextInput, ScrollView, Alert } from 'react-native';
+import { View, ImageBackground, TouchableOpacity, Text, TextInput, ScrollView, Alert, Modal, AsyncStorage, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-
-import homeBackGround from '../../assets/images/home-background.png'
-import style from './styles';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Usuario } from '../../model/UsuarioModel';
+import firebase from '../../services/firebase';
+import UsuarioFirebase from '../../services/UsuarioFirebase';
+
+import homeBackGround from '../../assets/images/home-background.png';
+import style from './styles';
+
 
 const Cadastro = () => {
 
@@ -18,9 +21,12 @@ const Cadastro = () => {
     const [email, setEmail] = useState<string>('');
     const [senha, setSenha] = useState<string>('');
     const [dataNacimento, setDataNascimento] = useState<string>('');
+    const [usuarioCadastro, setUsuarioCadastro] = useState<Usuario>();
 
-    const [initialPosition, setInitialPosition] = useState<[number,number]>([0,0]);
-    const [localizacao, setLocalizacao] = useState<[number,number]>([0,0]);
+    const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
+    const [localizacao, setLocalizacao] = useState<[number, number]>([0, 0]);
+
+    const [modalVisible, setModalVisible] = useState(false);
 
     function navigatedBack() {
         navigation.goBack();
@@ -31,37 +37,58 @@ const Cadastro = () => {
     }
 
     function criarUsuario(usuario: Usuario) {
-        // const service = new clienteService();
-        // service.criarCliente(usuario)
+        const service = new UsuarioFirebase();
+        service.insert(usuario).then(response => {
+            setUsuarioCadastro(usuario)
+            setModalVisible(true)
+            setNome('')
+            setEmail('')
+            setSenha('')
+            setDataNascimento('')
+            setLocalizacao([0,0]);
+        })
     }
 
     function handleCadastrar() {
-        // firebase.auth().createUserWithEmailAndPassword(email, senha).then(response => {
+
+        if (nome == '' || email == '' || senha == '' || dataNacimento == '' || localizacao[0] == 0 && localizacao[1] == 0) {
+            return Alert.alert('Campo invalido', 'Prencha os campos em brancos')
+        }
+
+        const data: any = new Date(dataNacimento)
+
+        if (data == 'Invalid Date') {
+            return Alert.alert('Data de nascimento invalida', 'Data preenchida invalida')
+        }
+
+        firebase.auth().createUserWithEmailAndPassword(email, senha).then(async response => {
             const user: Usuario = {
-                nomeCompleto: nome, 
-                email, 
-                dataNascimento: new Date(dataNacimento).toISOString(),
+                nomeCompleto: nome,
+                email,
+                dataNascimento: new Date(dataNacimento).toISOString().split('T')[0],
                 localidade: {
                     latitude: localizacao[0],
                     longitude: localizacao[1],
                 },
-                // uid: response.user?.uid
+                uid: response.user?.uid
             };
-            console.log(user)
-            // criarUsuario(user)
-
-        // })
+            AsyncStorage.setItem('login', JSON.stringify(response.user));
+            criarUsuario(user)
+        }).catch(error => {
+            console.log(error)
+            return Alert.alert('Erro ao criar cadastrado', `${error}`)
+        })
     }
 
     useEffect(() => {
         async function loadPosition() {
             const { status } = await Location.requestPermissionsAsync();
 
-            if(status !== 'granted') {
+            if (status !== 'granted') {
                 Alert.alert('Ooooops, precisamos da sua permissão para obter a localização.');
                 return;
             }
-            
+
             const location = await Location.getCurrentPositionAsync();
             const { latitude, longitude } = location.coords;
             setInitialPosition([
@@ -71,6 +98,10 @@ const Cadastro = () => {
         }
         loadPosition();
     })
+
+    function recLogin() {
+        navigation.navigate('UserTabs');
+    }
 
     return (
         <ImageBackground source={homeBackGround} style={style.container} imageStyle={{ width: 274, height: 368 }}>
@@ -131,10 +162,10 @@ const Cadastro = () => {
                         />
                     </View>
 
-                    <Text style={style.inputTitle}>Minha localização:</Text>
+                    <Text style={[style.inputTitle, { marginTop: 20 }]}>Minha localização:</Text>
                     <View style={style.viewMap}>
-                        { initialPosition[0] !== 0 && (
-                            <MapView 
+                        {initialPosition[0] !== 0 && (
+                            <MapView
                                 loadingEnabled={initialPosition[0] === 0}
                                 style={style.mapMarker}
                                 initialRegion={{
@@ -147,24 +178,57 @@ const Cadastro = () => {
                             >
                                 <Marker
                                     coordinate={{
-                                        latitude: localizacao[0], 
+                                        latitude: localizacao[0],
                                         longitude: localizacao[1],
                                     }}
                                 >
                                     <MaterialCommunityIcons name="map-marker-radius" size={40} color="green" />
                                 </Marker>
                             </MapView>
-                        ) }
+                        )}
                     </View>
 
+                    <View style={style.footer}>
+                        <TouchableOpacity style={style.buttonCadastrar} onPress={handleCadastrar}>
+                            <Feather name="user-plus" size={24} color="white" />
+                            <Text style={style.buttonCadastrarText}>Cadastrar</Text>
+                        </TouchableOpacity>
+                    </View>
                 </ScrollView>
-                <View style={style.footer}>
-                    <TouchableOpacity style={style.buttonCadastrar} onPress={handleCadastrar}>
-                        <Feather name="user-plus" size={24} color="white" />
-                        <Text style={style.buttonCadastrarText}>Cadastrar</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                }}
+            >
+                <View style={style.modalContainer}>
+                    <View style={style.modalHeader}>
+                        <Text style={style.modalTitle}>Cadastro realizado</Text>
+                        <TouchableOpacity onPress={() => setModalVisible(false)}>
+                            <Feather name="x" size={18} color="red" />
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={style.modalBody}>
+                        <Text style={style.modalText}>O usuario do email <Text style={{ fontWeight: 'bold' }}>{usuarioCadastro?.email}</Text> realizado com sucesso</Text>
+                        <Text style={style.modalText}>Deseja relizar login direto?</Text>
+                    </View>
+
+                    <View style={style.modalFooter}>
+                        <TouchableOpacity style={style.buttoModalFooterButtonSim} onPress={recLogin}>
+                            <Feather name="thumbs-up" size={18} color="#ffff" />
+                            <Text style={style.textModalText}>Sim</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={style.buttoModalFooterButtonNao} onPress={() => setModalVisible(false)}>
+                            <Feather name="thumbs-down" size={18} color="#ffff" />
+                            <Text style={style.textModalText}>Não</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </ImageBackground>
     )
 }
