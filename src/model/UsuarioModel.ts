@@ -1,6 +1,6 @@
 import { LocalidadeModel } from "./LocalidadeModel";
 
-export interface Cliente {
+export interface Usuario {
     id?: string,
     nomeCompleto?: string,
     dataNascimento?: string,

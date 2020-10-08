@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 10,
         marginLeft: 25,
-        fontFamily: 'Aleo_400Regular_Italic'
+        fontFamily: 'Aleo_400Regular_Italic',
     },
     viewInput: {
         flexDirection: 'row-reverse',
@@ -45,6 +45,19 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingLeft: 10,
         // backgroundColor: 'white',
+    },
+    viewMap: {
+        flex: 1,
+        width: '100%',
+        borderRadius: 10,
+        overflow: 'hidden',
+        marginTop: 16,
+        borderColor: 'gray',
+        borderWidth: 1,
+    },
+    mapMarker: {
+        width: '100%',
+        height: 220,
     },
     footer: {
         width: '100%',
@@ -69,7 +82,6 @@ const styles = StyleSheet.create({
         width: '90%',
         textAlign: 'center',
         // fontFamily: 'Aleo_700Bold',
-
     },
 });
 export default styles;
