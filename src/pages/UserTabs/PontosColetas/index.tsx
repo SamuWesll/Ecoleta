@@ -41,19 +41,19 @@ const PontosColetas: React.FC = ({ }) => {
         })
     }
 
-    async function consultarPontos() {
+    function consultarPontos() {
         const service: PontoColetaService = new PontoColetaService();
-        let lista: Array<PontoColeta> = []
+        let lista: Array<PontoColeta> = [];
         service.findByAll().then(response => {
             response.forEach(resp => {
-                lista.push({id: resp.id, ...resp.data() as PontoColeta});
+                lista.push({ id: resp.id, ...resp.data() as PontoColeta });
             })
-            setListaPontos(lista)
         })
+        setListaPontos(lista)
     }
 
     useEffect(() => {
-        
+
         consultarListaItems();
         consultarPontos();
 
@@ -73,7 +73,11 @@ const PontosColetas: React.FC = ({ }) => {
             ])
         }
         loadPosition();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        // consultarPontos()
+    }, [selectedItems])
 
     return (
         <View style={style.container}>
@@ -108,6 +112,10 @@ const PontosColetas: React.FC = ({ }) => {
                     </View>
                 </View>
 
+                {listaPonto?.map(ponto => {
+                    <Text>{ponto.nome}</Text>
+                })}
+
                 <View style={style.viewMap}>
                     {initialPosition[0] !== 0 && (
                         <MapView
@@ -120,17 +128,7 @@ const PontosColetas: React.FC = ({ }) => {
                                 longitudeDelta: 0.024
                             }}
                         >
-                            {listaPonto?.map(ponto => {
-                                <Marker
-                                    key={ponto.id}
-                                    coordinate={{
-                                        latitude: ponto.localidade.latitude,
-                                        longitude: ponto.localidade.longitude,
-                                    }}
-                                >
-                                    
-                                </Marker>
-                            })}
+
                         </MapView>
                     )}
                 </View>
