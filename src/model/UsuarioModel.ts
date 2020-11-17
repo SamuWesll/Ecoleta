@@ -6,5 +6,5 @@ export interface Usuario {
     dataNascimento?: string,
     email?: string,
     uid?: string,
-    localidade: LocalidadeModel,
+    localidade?: LocalidadeModel,
 }

@@ -72,6 +72,7 @@ const Cadastro = () => {
                 },
                 uid: response.user?.uid
             };
+            AsyncStorage.setItem('usuario', JSON.stringify(user));
             AsyncStorage.setItem('login', JSON.stringify(response.user));
             criarUsuario(user)
         }).catch(error => {
@@ -100,6 +101,7 @@ const Cadastro = () => {
     })
 
     function recLogin() {
+        setModalVisible(false);
         navigation.navigate('UserTabs');
     }
 

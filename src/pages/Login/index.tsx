@@ -9,11 +9,15 @@ import homeBackGround from '../../assets/images/home-background.png'
 import logoImg from '../../assets/images/logo.png'
 
 import style from './style';
+import Carregando from '../../components/Carregando';
+import UsuarioFirebase from '../../services/UsuarioFirebase';
+import { Usuario } from '../../model/UsuarioModel';
 
 const Login = () => {
 
     const [email, setEmail] = useState<string>('');
     const [senha, setSenha] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
     const navigation = useNavigation();
 
@@ -21,13 +25,29 @@ const Login = () => {
         navigation.goBack();
     }
 
-    function login() {
-        firebase.auth().signInWithEmailAndPassword(email, senha).then(response => {
+    async function login() {
+        var uid: string = "";
+        var usuario: Usuario = {};
+        const usuarioService: UsuarioFirebase = new UsuarioFirebase;
+        await firebase.auth().signInWithEmailAndPassword(email, senha).then(response => {
             AsyncStorage.setItem('login', JSON.stringify(response.user))
-            navigation.navigate('UserTabs');
+            uid = response.user?.uid as string;
+            setLoading(true);
         }).catch(error => {
             Alert.alert('Erro ao realizar login', `${error}`)
         })
+        await usuarioService.consultar(uid).onSnapshot(resp => {
+            usuario = resp.data() as Usuario;
+            AsyncStorage.setItem('usuario', JSON.stringify(usuario));
+        });
+        setLoading(false);
+        navigation.navigate('UserTabs');
+    }
+
+    if (loading) {
+        return (
+            <Carregando />
+        )
     }
 
     return (

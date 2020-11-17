@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AntDesign } from '@expo/vector-icons'
 import { Feather } from '@expo/vector-icons';
 import PontosColetas from '../pages/UserTabs/PontosColetas';
 import Perfil from '../pages/UserTabs/Perfil';
+import { Usuario } from '../model/UsuarioModel';
+import { AsyncStorage } from 'react-native';
+import Carregando from '../components/Carregando';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
 const UserTabs = () => {
+
+    const [usuario, setUsuario] = useState<Usuario>({});
+
+    useEffect(() => {
+        AsyncStorage.getItem('usuario').then(response => {
+            setUsuario(JSON.parse(response as any))
+        })
+    }, [])
+
+    if (!usuario) {
+        return (
+            <Carregando />
+        )
+    }
+
     return (
         <Navigator
             tabBarOptions={{
